@@ -1,0 +1,179 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+// Tabellenname PascalCase und Singular
+model Signature {
+  // ID, wenn man eine automatisch hochgezählte Integer-Zahl möchte.
+  // Achtung, Gefahr, dass jemand einfach IDs ausprobiert.
+  //  id Int @id @default(autoincrement())
+  id       String   @id @default(uuid()) // Kryptische Strings ohne Reihenfolge als ID
+  name     String? // Optionale Spalte
+  email    String   @unique // Einzigartiger Wert, Adresse darf nicht zweimal vorkommen
+  approved Boolean  @default(false)
+  date     DateTime @default(now()) // Zeitpunk der Erstellung des Eintrags
+}
+
+model Event {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  date        DateTime
+  poster      Poster? // 1:1 Relation, muss hier (wo nicht @relation verwendet wird) optional sein
+  // 1:n Relation, Event kann nur eine Venue haben
+  venue       Venue      @relation(fields: [venueId], references: [id])
+  venueId     Int
+  // n:m Relation, Event kann mehrere Kategorien haben
+  category    Category[]
+}
+
+model Poster {
+  id      Int    @id @default(autoincrement())
+  url     String
+  event   Event  @relation(fields: [eventId], references: [id]) // Angabe dient nur Prisma
+  eventId Int    @unique // Feld tauch in der Datenbank auf
+}
+
+model Venue {
+  id    Int     @id @default(autoincrement())
+  name  String
+  event Event[] // 1:n Relation, Venue kann viele Events haben
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String
+  // n:m Relation, Kategorie kann viele Events haben
+  event Event[]
+}
+
+model User {
+  id                   Int            @id @default(autoincrement())
+  username             String         @unique
+  email                String         @unique
+  profilePicture       String?
+  defaultLocation      String
+  bio                  String?
+  fridges              Fridge[]
+  givenTransactions    Transaction[]  @relation("Giver")
+  receivedTransactions Transaction[]  @relation("Receiver")
+  sentMessages         Message[]      @relation("SentMessages")
+  receivedMessages     Message[]      @relation("ReceivedMessages")
+  reviewsGiven         Review[]       @relation("Reviewer")
+  reviewsReceived      Review[]       @relation("Reviewed")
+  favorites            Favorite[]
+  notifications        Notification[]
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  Location             Location?      @relation(fields: [locationId], references: [id])
+  locationId           Int?
+}
+
+model Fridge {
+  id          Int        @id @default(autoincrement())
+  fridgeTitle String
+  location    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  User        User?      @relation(fields: [userId], references: [id])
+  userId      Int?
+  FoodItem    FoodItem[]
+}
+
+model FoodItem {
+  id             Int           @id @default(autoincrement())
+  title          String
+  description    String
+  category       String
+  quantity       Int
+  expirationDate DateTime
+  location       String?
+  photo          String?
+  transactions   Transaction[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Message        Message[]
+  Favorite       Favorite[]
+  Fridge         Fridge?       @relation(fields: [fridgeId], references: [id])
+  fridgeId       Int?
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement())
+  foodItem        FoodItem @relation(fields: [foodItemId], references: [id])
+  foodItemId      Int
+  giver           User     @relation("Giver", fields: [giverId], references: [id])
+  giverId         Int
+  receiver        User     @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId      Int
+  status          String //"pending", "completed", "canceled"
+  transactionDate DateTime
+  rating          Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Review          Review[]
+}
+
+model Message {
+  id         Int       @id @default(autoincrement())
+  content    String
+  sentAt     DateTime  @default(now())
+  read       Boolean   @default(false)
+  sender     User      @relation("SentMessages", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId Int
+  foodItem   FoodItem? @relation(fields: [foodItemId], references: [id])
+  foodItemId Int?
+}
+
+model Review {
+  id            Int         @id @default(autoincrement())
+  reviewer      User        @relation("Reviewer", fields: [reviewerId], references: [id])
+  reviewerId    Int
+  reviewed      User        @relation("Reviewed", fields: [reviewedId], references: [id])
+  reviewedId    Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int
+  rating        Int // 1-5 stars
+  comment       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  foodItem   FoodItem @relation(fields: [foodItemId], references: [id])
+  foodItemId Int
+  createdAt  DateTime @default(now())
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  User User[]
+  lat  Int
+  lng  Int
+}
