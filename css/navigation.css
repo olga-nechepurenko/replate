@@ -52,3 +52,7 @@ a {
     padding-left: 30px;
     margin: 0;
 }
+
+.fridge__link {
+    text-decoration: none;
+}

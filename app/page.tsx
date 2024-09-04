@@ -25,7 +25,7 @@ export default async function Home() {
                                 <Link href="/register">Start sharing</Link>
                             </li>
                             <li>
-                                <Link href="/">Explore food</Link>
+                                <Link href="/explore">Explore food</Link>
                             </li>
                         </ul>
                     </div>

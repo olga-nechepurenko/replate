@@ -51,6 +51,16 @@ dd {
     text-align: right;
 }
 
+.btn-take {
+    display: block;
+    width: 100%;
+    text-align: right;
+    button {
+        background-color: transparent;
+        color: var(--blue);
+    }
+}
+
 .add-product {
     width: 100%;
     height: fit-content;
@@ -66,8 +76,4 @@ dd {
         gap: 35px;
         padding: 0px 0px 0px 35px;
     }
-
-    /* .delete-button-in-list {
-        align-self: flex-end;
-    } */
 }
