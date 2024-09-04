@@ -5,6 +5,7 @@ import { capitalize } from "es-toolkit";
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/db";
 import FridgeTeaser from "@/components/FridgeTeaser";
+import AddFridge from "@/components/AddFridge";
 
 type Props = {
     params: {
@@ -33,6 +34,7 @@ export default async function FridgesPage({ params: { profileId } }: Props) {
                 {fridges.map((fridge) => (
                     <FridgeTeaser key={fridge.id} {...fridge} />
                 ))}
+                <AddFridge profileId={Number(profileId)} />
             </div>
         </div>
     );

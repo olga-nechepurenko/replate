@@ -41,9 +41,7 @@ export default async function SingleFridgePage({
             {fridge.foodItems.length > 0 && (
                 <>
                     <dt>
-                        <h4>
-                            Produkte: <IoAddCircleOutline />
-                        </h4>
+                        <h4>Produkte: <IoAddCircleOutline /></h4>
                     </dt>
                     <dd>
                         {fridge.foodItems.map((foodItem) => (

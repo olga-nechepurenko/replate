@@ -6,6 +6,7 @@ import logo from "@/images/logo.png";
 import UserNavigation from "./UserNavigation";
 import { DeleteProfile } from "./Registration/DeleteProfile";
 import { userInDb } from "./Registration/registrationServerActions";
+import Link from "next/link";
 
 export default async function Header() {
     const session = await auth();
@@ -18,12 +19,15 @@ export default async function Header() {
     return (
         <header className="grid-container">
             <div className="grid-item">
-                <Image
-                    alt="meal"
-                    src={logo}
-                    sizes="(max-height: 2rem) 90vw,  2rem"
-                    placeholder="blur"
-                />
+                <Link href={"/"}>
+                    {" "}
+                    <Image
+                        alt="meal"
+                        src={logo}
+                        sizes="(max-height: 2rem) 90vw,  2rem"
+                        placeholder="blur"
+                    />
+                </Link>
             </div>
             <div className="grid-item-user">
                 {session ? (

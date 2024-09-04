@@ -27,7 +27,7 @@ export default function FridgeTeaser({
 }: Props) {
     return (
         <article className="product-teaser">
-            <h2 className="product-teaser__title capitalize">
+            <h2>
                 <Link href={`/fridge/${id}`}>{fridgeTitle}</Link>
             </h2>
             {defaultLocation && (

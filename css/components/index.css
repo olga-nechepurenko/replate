@@ -20,3 +20,9 @@
         width: 100%;
     }
 }
+
+.add-fridge-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
