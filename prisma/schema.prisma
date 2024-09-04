@@ -82,15 +82,16 @@ model User {
 }
 
 model Fridge {
-  id          Int        @id @default(autoincrement())
-  fridgeTitle String     @default("Home")
-  Location    Location?  @relation(fields: [locationId], references: [id])
-  locationId  Int?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  User        User?      @relation(fields: [userId], references: [id])
-  userId      Int?
-  foodItems   FoodItem[]
+  id              Int        @id @default(autoincrement())
+  defaultLocation String?
+  fridgeTitle     String     @default("Home")
+  Location        Location?  @relation(fields: [locationId], references: [id])
+  locationId      Int?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  User            User?      @relation(fields: [userId], references: [id])
+  userId          Int?
+  foodItems       FoodItem[]
 }
 
 model FoodItem {

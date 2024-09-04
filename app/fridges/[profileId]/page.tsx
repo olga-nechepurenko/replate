@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { capitalize } from "es-toolkit";
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/db";
+import FridgeTeaser from "@/components/FridgeTeaser";
 
 type Props = {
     params: {
@@ -15,6 +16,10 @@ export default async function FridgesPage({ params: { profileId } }: Props) {
         where: {
             userId: Number(profileId),
         },
+        include: {
+            Location: true,
+            foodItems: true,
+        },
     });
 
     if (!fridges.length) {
@@ -23,11 +28,10 @@ export default async function FridgesPage({ params: { profileId } }: Props) {
 
     return (
         <div>
-            <h1 className="capitalize">Meine Kühlschranken</h1>
+            <h1 className="capitalize">Meine Kühlschränken</h1>
             <div className="product-teasers grid">
                 {fridges.map((fridge) => (
-                    <p key={fridge.id}>{fridge.fridgeTitle}</p>
-                    // <FridgeTeaser key={fridge.id} {...fridge} />
+                    <FridgeTeaser key={fridge.id} {...fridge} />
                 ))}
             </div>
         </div>

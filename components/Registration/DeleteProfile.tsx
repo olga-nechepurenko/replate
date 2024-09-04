@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function DeleteProfile({ email }: { email: string }) {
     const user = await prisma.user.findUnique({
@@ -51,5 +52,5 @@ async function deleteUser(id: number) {
             id,
         },
     });
-    revalidatePath("/register");
+    redirect("/");
 }

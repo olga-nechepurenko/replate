@@ -47,7 +47,7 @@ export default function UserNavigation({
                         {profileId ? (
                             <>
                                 <Link href={`/fridges/${profileId}`}>
-                                    Kühlschranken
+                                    Kühlschränken
                                 </Link>
                                 <Link href={`/transactions/${profileId}`}>
                                     Transactions

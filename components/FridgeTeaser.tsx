@@ -1,7 +1,8 @@
+import type { FoodItem, Fridge } from "@prisma/client";
 import Link from "next/link";
 
 type Props = {
-    Location: {
+    Location?: {
         id: number;
         lat: number;
         lng: number;
@@ -13,24 +14,37 @@ type Props = {
     createdAt: Date;
     updatedAt: Date;
     userId: number | null;
-};
-export default function FridgeTeaser({ Location, fridgeTitle, id }: Props) {
+    defaultLocation: string | null;
+    foodItems: FoodItem[] | null;
+} & { interact?: boolean };
+export default function FridgeTeaser({
+    Location,
+    fridgeTitle,
+    id,
+    defaultLocation,
+    foodItems,
+    interact = false,
+}: Props) {
     return (
         <article className="product-teaser">
             <h2 className="product-teaser__title capitalize">
                 <Link href={`/fridge/${id}`}>{fridgeTitle}</Link>
             </h2>
-            <strong>Ort:</strong>
-            {/* {foodItems.length > 0 && (
-                    <>
-                        <dt>Kategor{category.length > 1 ? "ien:" : "ie:"}</dt>
-                        <dd>
-                            {category
-                                .map((category) => category.name)
-                                .join(", ")}
-                        </dd>
-                    </>
-                )} */}
+            {defaultLocation && (
+                <>
+                    <strong>Ort: {defaultLocation}</strong>
+                </>
+            )}
+
+            {foodItems?.length && foodItems?.length > 0 && (
+                <ul>
+                    {foodItems.map((foodItem) => (
+                        <li key={foodItem.id}>
+                            {foodItem.title} : {foodItem.quantity}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </article>
     );
 }

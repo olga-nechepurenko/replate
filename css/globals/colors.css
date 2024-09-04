@@ -10,6 +10,7 @@
 	--green: var(--lime-10);
 	--blue: var(--indigo-11);
 	--pink: var(--pink-8);
+
 	/* Fast schwarz oder weiß. Texte mit vollem Schwarz-Weiß-Kontrast
 	sind schwerer zu lesen also welche mit leicht reduziertem Kontrast. */
 	--off-white: var(--gray-1);

@@ -1,32 +1,47 @@
 .unstyled-list {
-	/* Use [role='list'] to remove list style */
-	padding: 0;
-	margin: 0;
+    /* Use [role='list'] to remove list style */
+    padding: 0;
+    margin: 0;
 }
 
 ul,
 ol {
-	margin: 0 0 1.5em 3em;
+    margin: 0 0 1.5em 3em;
 }
 
 ul {
-	list-style: disc;
+    list-style: disc;
 }
 
 ol {
-	list-style: decimal;
+    list-style: decimal;
 }
 
 li > ul,
 li > ol {
-	margin-bottom: 0;
-	margin-left: 1.5em;
+    margin-bottom: 0;
+    margin-left: 1.5em;
 }
 
 dt {
-	font-weight: 700;
+    font-weight: 700;
 }
 
 dd {
-	margin: 0 1.5em 1.5em;
+    margin: 0 1.5em 1.5em;
+}
+
+.product-in-fridge {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 35px;
+    box-shadow: var(--shadow-3);
+    padding: var(--size-fluid-2);
+    margin-block: var(--size-fluid-2);
+
+    .delete-button-in-list {
+        align-self: flex-end;
+    }
 }

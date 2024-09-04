@@ -1,7 +1,10 @@
 export default async function Footer() {
     return (
-        <footer className="">
-            <small>&copy; {new Date().getFullYear()}</small>
+        <footer className="footer-copy">
+            <small>
+                {" "}
+                rePlate&copy; {new Date().getFullYear()} by Nechepurenko
+            </small>
         </footer>
     );
 }

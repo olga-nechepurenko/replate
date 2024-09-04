@@ -102,13 +102,25 @@ export async function addUser(prevState: unknown, formData: FormData) {
                         id: locationExists.id,
                     },
                 },
+                fridges: {
+                    create: [
+                        {
+                            defaultLocation: data.location,
+                            Location: {
+                                connect: {
+                                    id: locationExists.id,
+                                },
+                            },
+                        },
+                    ],
+                },
                 bio: data.bio,
                 defaultLocation: data.location,
             },
         });
     } else {
         //create user and location in db
-        await prisma.user.create({
+        const newUser = await prisma.user.create({
             data: {
                 username: data.name,
                 email: data.email,
@@ -120,6 +132,16 @@ export async function addUser(prevState: unknown, formData: FormData) {
                 },
                 bio: data.bio,
                 defaultLocation: data.location,
+            },
+        });
+
+        //create fridge in db
+        await prisma.fridge.create({
+            data: {
+                userId: newUser.id,
+                defaultLocation: data.location,
+                locationId: newUser.locationId,
+                fridgeTitle: "Home",
             },
         });
     }

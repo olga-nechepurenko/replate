@@ -32,8 +32,8 @@ export default async function Header() {
                         profileId={profileId}
                         slot={
                             <>
-                                <SignOut />
                                 <DeleteProfile email={email} />
+                                <SignOut />
                             </>
                         }
                     />

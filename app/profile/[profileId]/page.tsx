@@ -16,8 +16,7 @@ export default async function ProfilePage({ params: { profileId } }: Props) {
         },
         include: {
             Location: true,
-            fridges: { include: { Location: true } },
-            //foodItems: true,
+            fridges: { include: { Location: true, foodItems: true } },
         },
     });
 
@@ -88,12 +87,12 @@ export async function generateMetadata({
 
     if (!profile) {
         return {
-            title: "Profil von user",
+            title: "rePlate - Profil von user",
         };
     }
 
     return {
-        title: profile.username,
+        title: `rePlate - ${profile.username}`,
     };
 }
 

@@ -55,8 +55,10 @@ export default function RegistratingForm({
             {edit && <h1>Profil bearbeiten</h1>}
             {id !== undefined && !edit ? (
                 <div>
-                    <IoCheckboxOutline />
-                    <p>Dein profil wurde erfolgreich hinzugefügt.</p>
+                    <p>
+                        <IoCheckboxOutline /> Dein profil wurde erfolgreich
+                        hinzugefügt.
+                    </p>
                     <Link href={`/profile/${id}`}>zum Profil</Link>
                 </div>
             ) : (
@@ -81,7 +83,6 @@ export default function RegistratingForm({
                                     maxLength={100}
                                     autoComplete="name"
                                     required
-                                    //value={user?.username}
                                 />
                             </div>
                             <input
