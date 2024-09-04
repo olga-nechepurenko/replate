@@ -55,7 +55,11 @@ export default function LocationSearch({ setUserLocation }: Props) {
         <div className="combobox">
             <label {...getLabelProps()}>Ort oder Postleitzahl</label>
             <div className="input-delet-wrapper">
-                <input {...getInputProps()} className="combobox__input" />
+                <input
+                    name="location"
+                    {...getInputProps()}
+                    className="combobox__input"
+                />
                 <button onClick={clearSearch} aria-label="Eingabe löschen">
                     &times;
                 </button>

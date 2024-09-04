@@ -20,32 +20,6 @@ export async function userInDb(email: string) {
     return user;
 }
 
-// export async function approveSignature(id: string, approve: boolean) {
-//     /* Mit Hilfe von prisma die zur id passende Unterschrift entweder löschen
-// 	oder den approved-Status auf true setzen. */
-//     if (approve) {
-//         await prisma.signature.update({
-//             where: {
-//                 id,
-//             },
-//             data: {
-//                 approved: true,
-//             },
-//         });
-//     } else {
-//         await prisma.signature.delete({
-//             where: {
-//                 id,
-//             },
-//         });
-//     }
-
-//     /*
-// 	Löscht den Cache für die angegebene Route und aktualisiert die Anzeige:
-// 	https://nextjs.org/docs/app/api-reference/functions/revalidatePath */
-//     revalidatePath("/petition");
-// }
-
 /* 1. Mit zfd ein Schema erstellen, dass zum Formular passt.
 https://www.npmjs.com/package/zod-form-data
 https://developer.mozilla.org/en-US/docs/Web/API/FormData
@@ -60,14 +34,15 @@ https://developer.mozilla.org/en-US/docs/Web/API/FormData
 /* Wichtig: Wenn das Formular useFormState nutzt, wird formData zum
 zweiten Parameter, der erste ist der Startwert von useFormData */
 export async function addUser(prevState: unknown, formData: FormData) {
-    //console.log(formData.get("privacy"));
-
+    console.log(formData.get("lat"));
     const schema = zfd.formData({
         name: zfd.text(z.string().max(100)),
         email: zfd.text(z.string().email()),
-        location: zfd.text(z.coerce.number().positive().int().max(99999)),
+        lat: zfd.text(z.coerce.number().positive()),
+        lng: zfd.text(z.coerce.number().positive()),
         bio: zfd.text(z.string().max(500).optional()),
         privacy: z.literal("accept"),
+        location: zfd.text(z.string().max(100)),
     });
 
     const { success, data, error } = schema.safeParse(formData);
@@ -80,7 +55,7 @@ export async function addUser(prevState: unknown, formData: FormData) {
         };
     }
 
-    const emailExists = await prisma.signature.findUnique({
+    const emailExists = await prisma.user.findUnique({
         where: {
             email: data.email,
         },
@@ -99,14 +74,57 @@ export async function addUser(prevState: unknown, formData: FormData) {
         return successMessage;
     }
 
-    await prisma.signature.create({
-        data: {
-            name: data.name,
-            email: data.email,
+    //find location with 2 parameter in db
+    //check if location exists
+    console.log(Number(data.lat), Number(data.lng));
+
+    const locationExists = await prisma.location.findFirst({
+        where: {
+            AND: [
+                {
+                    lat: Number(data.lat),
+                },
+                {
+                    lng: Number(data.lng),
+                },
+            ],
         },
     });
 
-    revalidatePath("/petition");
+    if (locationExists) {
+        //create user in db
+        await prisma.user.create({
+            data: {
+                username: data.name,
+                email: data.email,
+                Location: {
+                    connect: {
+                        id: locationExists.id,
+                    },
+                },
+                bio: data.bio,
+                defaultLocation: data.location,
+            },
+        });
+    } else {
+        //create user and location in db
+        await prisma.user.create({
+            data: {
+                username: data.name,
+                email: data.email,
+                Location: {
+                    create: {
+                        lat: Number(data.lat),
+                        lng: Number(data.lng),
+                    },
+                },
+                bio: data.bio,
+                defaultLocation: data.location,
+            },
+        });
+    }
+
+    revalidatePath("/register");
 
     return successMessage;
 }

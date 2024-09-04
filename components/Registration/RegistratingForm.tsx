@@ -7,14 +7,32 @@ import SubmitButton from "../SubmitButton";
 import { addUser } from "./registrationServerActions";
 import LocationSearch from "./LocationSearch";
 import type { LatLng } from "@/types/location-types";
+import { IoCheckboxOutline } from "react-icons/io5";
+import { revalidatePath } from "next/cache";
 
-export default function RegistratingForm() {
+type Props = {
+    email: string;
+    user: {
+        id: number;
+        username: string;
+        email: string;
+        profilePicture: string | null;
+        defaultLocation: string;
+        bio: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        locationId: number | null;
+    } | null;
+};
+
+export default function RegistratingForm({ email = "", user }: Props) {
     const formRef = useRef<HTMLFormElement>(null!);
     const [formState, formAction] = useFormState(addUser, {
         message: "",
         status: "",
     });
 
+    const id = user?.id;
     const [userLocation, setUserLocation] = useState<LatLng | null>(null);
 
     /* Nutzt useEffect, um das Formularelement mit der Formularmethode
@@ -22,70 +40,86 @@ export default function RegistratingForm() {
     useEffect(() => {
         if (formState.status === "success") {
             formRef.current.reset();
+            setUserLocation(null);
         }
     }, [formState]);
 
     return (
         <>
-            <form action={formAction} ref={formRef}>
+            {id !== undefined ? (
                 <div>
-                    <div>
-                        <label htmlFor="name">Name</label>
-                        <input
-                            id="name"
-                            name="name"
-                            maxLength={100}
-                            autoComplete="name"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="email">E-Mail</label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            autoComplete="email"
-                            required
-                        />
-                    </div>
-                    <div>
-                        {/* <label htmlFor="location">Location</label>
-                        <input
-                            id="location"
-                            name="location"
-                            maxLength={5}
-                            required
-                        /> */}
-
-                        <LocationSearch setUserLocation={setUserLocation} />
-                    </div>
-                    <div>
-                        <label htmlFor="bio">Über mich</label>
-                        <textarea
-                            id="bio"
-                            name="bio"
-                            rows={5}
-                            cols={10}
-                            maxLength={500}
-                            defaultValue={""}
-                        />
-                    </div>
+                    <IoCheckboxOutline />
+                    <p>Dein profil wurde erfolgreich hinzugefügt.</p>
                 </div>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="privacy"
-                        value="accept"
-                        required
-                    />
-                    Ich stimme den Datenschutzbedingungen zu
-                </label>
-                <SubmitButton
-                    readyContent={<strong>Profil erstellen!</strong>}
-                />
-                <strong>{formState.message}</strong>
-            </form>
+            ) : (
+                <form action={formAction} ref={formRef}>
+                    {formState.status !== "success" && (
+                        <div>
+                            <input
+                                type="hidden"
+                                name="lat"
+                                value={userLocation?.lat}
+                            />
+                            <input
+                                type="hidden"
+                                name="lng"
+                                value={userLocation?.lng}
+                            />
+                            <div>
+                                <label htmlFor="name">Name</label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    maxLength={100}
+                                    autoComplete="name"
+                                    required
+                                />
+                            </div>
+                            <input
+                                id="email"
+                                name="email"
+                                type="hidden"
+                                value={email}
+                                required
+                            />
+                            <div>
+                                <LocationSearch
+                                    setUserLocation={setUserLocation}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="bio">Über mich</label>
+                                <textarea
+                                    id="bio"
+                                    name="bio"
+                                    rows={5}
+                                    cols={10}
+                                    maxLength={500}
+                                    defaultValue={""}
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {formState.status !== "success" && (
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="privacy"
+                                value="accept"
+                                required
+                            />
+                            Ich stimme den Datenschutzbedingungen zu
+                        </label>
+                    )}
+                    {formState.status !== "success" && (
+                        <SubmitButton
+                            readyContent={<strong>Profil erstellen!</strong>}
+                        />
+                    )}
+
+                    <strong>{formState.message}</strong>
+                </form>
+            )}
         </>
     );
 }
