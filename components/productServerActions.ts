@@ -51,11 +51,8 @@ export async function addProduct(prevState: unknown, formData: FormData) {
             description: data.description ?? "",
             quantity: data.quantity,
             expirationDate: data.expired,
-            Location: {
-                connect: {
-                    id: fridgeExist.locationId!,
-                },
-            },
+            locationId: fridgeExist.locationId,
+            category: "",
         },
     });
 
