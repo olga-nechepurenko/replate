@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/prisma/db";
 import ProductInFridge from "@/components/ProductInFridge";
 import { IoAddCircleOutline } from "react-icons/io5";
+import AddProduct from "@/components/AddProduct";
 
 type Props = {
     params: {
@@ -21,7 +22,11 @@ export default async function SingleFridgePage({
         },
         include: {
             Location: true,
-            foodItems: true,
+            foodItems: {
+                orderBy: {
+                    expirationDate: "desc",
+                },
+            },
         },
     });
 
@@ -38,17 +43,23 @@ export default async function SingleFridgePage({
                 </>
             )}
 
-            {fridge.foodItems.length > 0 && (
+            <dt>
+                <h4>Produkte:</h4>
+            </dt>
+            <dd>
+                {/* add products */}
+                <AddProduct fridgeId={Number(fridge.id)} />
+            </dd>
+            {fridge?.foodItems?.length > 0 ? (
                 <>
-                    <dt>
-                        <h4>Produkte: <IoAddCircleOutline /></h4>
-                    </dt>
                     <dd>
                         {fridge.foodItems.map((foodItem) => (
                             <ProductInFridge key={foodItem.id} {...foodItem} />
                         ))}
                     </dd>
                 </>
+            ) : (
+                <p>(keine Produkte vorhanden)</p>
             )}
         </div>
     );

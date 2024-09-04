@@ -2,7 +2,6 @@
 
 import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 type Props = {
     id: number;

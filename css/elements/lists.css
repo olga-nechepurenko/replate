@@ -45,3 +45,29 @@ dd {
         align-self: flex-end;
     }
 }
+
+.btn-delete-fridge-list {
+    width: 100%;
+    text-align: right;
+}
+
+.add-product {
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    box-shadow: var(--shadow-3);
+    //padding: var(--size-fluid-2);
+    margin-block: var(--size-fluid-2);
+
+    .add-product__link {
+        display: flex;
+        gap: 35px;
+        padding: 0px 0px 0px 35px;
+    }
+
+    /* .delete-button-in-list {
+        align-self: flex-end;
+    } */
+}

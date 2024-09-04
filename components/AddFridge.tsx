@@ -40,8 +40,9 @@ export default function AddFridge({ profileId }: Props) {
 	reset() zurückzusetzen, falls der Status in formState "success" ist. */
     useEffect(() => {
         if (formState.status === "success") {
-            //formRef.current.reset();
+            formRef.current.reset();
             setFridgeLocation(null);
+            setFormVisible(false);
         }
     }, [formState]);
 

@@ -101,7 +101,8 @@ model FoodItem {
   category       String
   quantity       Int
   expirationDate DateTime
-  location       String?
+  Location       Location?     @relation(fields: [locationId], references: [id])
+  locationId     Int?
   photo          String?
   transactions   Transaction[]
   createdAt      DateTime      @default(now())
@@ -174,9 +175,10 @@ model Favorite {
 }
 
 model Location {
-  id     Int      @id @default(autoincrement())
-  User   User[]
-  lat    Float
-  lng    Float
-  Fridge Fridge[]
+  id       Int        @id @default(autoincrement())
+  User     User[]
+  lat      Float
+  lng      Float
+  Fridge   Fridge[]
+  FoodItem FoodItem[]
 }

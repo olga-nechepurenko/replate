@@ -1,5 +1,6 @@
 import type { FoodItem, Fridge } from "@prisma/client";
 import Link from "next/link";
+import { DeleteFridge } from "./DeleteFridge";
 
 type Props = {
     Location?: {
@@ -23,20 +24,21 @@ export default function FridgeTeaser({
     id,
     defaultLocation,
     foodItems,
+    userId,
     interact = false,
 }: Props) {
     return (
         <article className="product-teaser">
-            <h2>
-                <Link href={`/fridge/${id}`}>{fridgeTitle}</Link>
-            </h2>
-            {defaultLocation && (
-                <>
-                    <strong>Ort: {defaultLocation}</strong>
-                </>
-            )}
+            <Link className="fridge__link" href={`/fridge/${id}`}>
+                <h2>{fridgeTitle}</h2>
 
-            {foodItems?.length && foodItems?.length > 0 && (
+                {defaultLocation && (
+                    <>
+                        <strong>Ort: {defaultLocation}</strong>
+                    </>
+                )}
+            </Link>
+            {foodItems?.length && foodItems?.length > 0 ? (
                 <ul>
                     {foodItems.map((foodItem) => (
                         <li key={foodItem.id}>
@@ -44,7 +46,12 @@ export default function FridgeTeaser({
                         </li>
                     ))}
                 </ul>
+            ) : (
+                <p>
+                    <small>(keine Produkte vorhanden)</small>
+                </p>
             )}
+            <DeleteFridge id={id} userId={userId} />
         </article>
     );
 }

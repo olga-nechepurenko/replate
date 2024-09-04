@@ -4,6 +4,65 @@ import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
+import type { title } from "process";
+
+export async function addProduct(prevState: unknown, formData: FormData) {
+    const schema = zfd.formData({
+        name: zfd.text(z.string().max(100)),
+        fridgeId: zfd.text(z.coerce.number().positive()),
+        description: zfd.text(z.string().max(500).optional()),
+        quantity: zfd.text(z.coerce.number().positive()),
+        expired: zfd.text(z.coerce.date()),
+    });
+
+    const { success, data, error } = schema.safeParse(formData);
+
+    if (!success) {
+        console.log(error);
+        return {
+            message: "Bitte überprüfen Sie Ihre Eingabe!",
+            status: "data-error",
+        };
+    }
+
+    const fridgeExist = await prisma.fridge.findUnique({
+        where: {
+            id: data.fridgeId,
+        },
+    });
+
+    const successMessage = {
+        message: "Produkt wurde angelegt",
+        status: "success",
+    };
+
+    if (!fridgeExist) {
+        return {
+            message: "Ein Fehler ist aufgetretten",
+            status: "data-error",
+        };
+    }
+
+    //create foodItem in db
+    await prisma.foodItem.create({
+        data: {
+            fridgeId: data.fridgeId,
+            title: data.name,
+            description: data.description ?? "",
+            quantity: data.quantity,
+            expirationDate: data.expired,
+            Location: {
+                connect: {
+                    id: fridgeExist.locationId!,
+                },
+            },
+        },
+    });
+
+    revalidatePath(`/fridge/${fridgeExist.id}`);
+
+    return successMessage;
+}
 
 export async function deleteProduct(id: number, fridgeId: number | null) {
     await prisma.foodItem
@@ -96,7 +155,11 @@ export async function addFridge(prevState: unknown, formData: FormData) {
         //create fridge and location in db
         const newFridge = await prisma.fridge.create({
             data: {
-                userId: data.profileId,
+                User: {
+                    connect: {
+                        id: userProfileExist.id,
+                    },
+                },
                 defaultLocation: data.location,
                 fridgeTitle: data.name,
                 Location: {
