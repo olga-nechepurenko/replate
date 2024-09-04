@@ -9,6 +9,7 @@ import LocationSearch from "./LocationSearch";
 import type { LatLng } from "@/types/location-types";
 import { IoCheckboxOutline } from "react-icons/io5";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 type Props = {
     email: string;
@@ -23,9 +24,14 @@ type Props = {
         updatedAt: Date;
         locationId: number | null;
     } | null;
+    edit: boolean;
 };
 
-export default function RegistratingForm({ email = "", user }: Props) {
+export default function RegistratingForm({
+    email = "",
+    user,
+    edit = false,
+}: Props) {
     const formRef = useRef<HTMLFormElement>(null!);
     const [formState, formAction] = useFormState(addUser, {
         message: "",
@@ -39,17 +45,19 @@ export default function RegistratingForm({ email = "", user }: Props) {
 	reset() zurückzusetzen, falls der Status in formState "success" ist. */
     useEffect(() => {
         if (formState.status === "success") {
-            formRef.current.reset();
+            //formRef.current.reset();
             setUserLocation(null);
         }
     }, [formState]);
 
     return (
         <>
-            {id !== undefined ? (
+            {edit && <h1>Profil bearbeiten</h1>}
+            {id !== undefined && !edit ? (
                 <div>
                     <IoCheckboxOutline />
                     <p>Dein profil wurde erfolgreich hinzugefügt.</p>
+                    <Link href={`/profile/${id}`}>zum Profil</Link>
                 </div>
             ) : (
                 <form action={formAction} ref={formRef}>
@@ -73,6 +81,7 @@ export default function RegistratingForm({ email = "", user }: Props) {
                                     maxLength={100}
                                     autoComplete="name"
                                     required
+                                    //value={user?.username}
                                 />
                             </div>
                             <input

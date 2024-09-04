@@ -4,11 +4,19 @@ import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 
 export async function DeleteProfile({ email }: { email: string }) {
+    const user = await prisma.user.findUnique({
+        where: {
+            email,
+        },
+    });
+    if (!user) {
+        return;
+    }
     return (
         <form
             action={async () => {
                 "use server";
-                await deleteUser(email);
+                await deleteUser(user.id);
             }}
         >
             <button type="submit">Profile löschen</button>
@@ -16,11 +24,31 @@ export async function DeleteProfile({ email }: { email: string }) {
     );
 }
 
-async function deleteUser(email: string) {
-    //await wait(1000);
+async function deleteUser(id: number) {
+    await prisma.fridge
+        .deleteMany({
+            where: {
+                userId: id,
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    //if (user.locationId) {
+    //     await prisma.location
+    //         .delete({
+    //             where: {
+    //                 id: user.locationId,
+    //             },
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }
+
     await prisma.user.delete({
         where: {
-            email,
+            id,
         },
     });
     revalidatePath("/register");

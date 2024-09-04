@@ -39,13 +39,10 @@ export default async function AddFridge({ email }: { email: string }) {
             data: {
                 fridgeTitle: "Home",
                 userId: profile.id,
-                Location: {
-                    connect: {
-                        id: profile.locationId,
-                    },
-                },
+                locationId: profile.locationId,
             },
         });
+        console.log(fridge);
     }
 
     return (

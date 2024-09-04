@@ -5,10 +5,16 @@ import Image from "next/image";
 import logo from "@/images/logo.png";
 import UserNavigation from "./UserNavigation";
 import { DeleteProfile } from "./Registration/DeleteProfile";
+import { userInDb } from "./Registration/registrationServerActions";
 
 export default async function Header() {
     const session = await auth();
     const email = session?.user?.email ?? "";
+
+    const profile = await userInDb(email);
+    const profileId = profile?.id ?? null;
+
+    //profileId
     return (
         <header className="grid-container">
             <div className="grid-item">
@@ -23,6 +29,7 @@ export default async function Header() {
                 {session ? (
                     <UserNavigation
                         {...session.user}
+                        profileId={profileId}
                         slot={
                             <>
                                 <SignOut />
