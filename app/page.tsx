@@ -2,9 +2,26 @@ import Image from "next/image";
 import meal from "@/images/pexels-photo-4871119.webp";
 import Link from "next/link";
 import { auth } from "@/auth";
+import { userInDb } from "@/components/Registration/registrationServerActions";
+import SearchComponent from "@/components/SearchComponent";
+import prisma from "@/prisma/db";
+import type { Location, User } from "@prisma/client";
 
+export type UserWithLocation = User & { Location: Location | null };
 export default async function Home() {
     const session = await auth();
+    let profile: unknown;
+    if (session) {
+        profile = await prisma.user.findUnique({
+            where: {
+                email: session.user.email,
+            },
+            include: {
+                Location: true,
+            },
+        });
+    }
+
     return (
         <>
             {!session && (
@@ -33,9 +50,18 @@ export default async function Home() {
             )}
 
             {session && (
-                <p className="welcome-message">
-                    Willkommen {session.user.name} !
-                </p>
+                <>
+                    <p className="welcome-message">
+                        SERVUS {session.user.name}!
+                    </p>
+                    <p className="welcome-message">
+                        SCHAU DIR AN, WAS IN DEINER NÄHE GIBT -{" "}
+                        <Link href="/explore">EXPLORE FOOD</Link>
+                    </p>
+                    <SearchComponent
+                        userProfile={profile as UserWithLocation}
+                    />
+                </>
             )}
         </>
     );

@@ -173,3 +173,72 @@ export async function addFridge(prevState: unknown, formData: FormData) {
 
     return successMessage;
 }
+
+export async function searchProducts(
+    productName: string,
+    userLat: number,
+    userLng: number,
+    radius: number
+) {
+    if (!productName || !userLat || !userLng) {
+        return [];
+    }
+
+    // Step 1: Search foodItems by name
+    const foodItems = await prisma.foodItem
+        .findMany({
+            where: {
+                title: {
+                    contains: String(productName), // Find food Item names that contain the search term
+                    mode: "insensitive", // Case-insensitive search
+                },
+            },
+            include: {
+                Location: true,
+                Fridge: true,
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+            return [];
+        });
+
+    // Step 2: Filter foodItems by distance
+    const filteredFoodItems = foodItems.filter((foodItem) => {
+        const foodItemLat = foodItem.Location!.lat;
+        const foodItemLng = foodItem.Location!.lng;
+        const distance = getDistanceFromLatLonInKm(
+            userLat,
+            userLng,
+            foodItemLat,
+            foodItemLng
+        );
+        return distance <= radius;
+    });
+
+    return filteredFoodItems;
+}
+
+// Helper function to calculate distance between two coordinates (Haversine formula)
+function getDistanceFromLatLonInKm(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+) {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+            Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in km
+    return distance;
+}
+function deg2rad(deg: number) {
+    return deg * (Math.PI / 180);
+}

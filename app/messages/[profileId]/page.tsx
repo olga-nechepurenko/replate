@@ -50,9 +50,9 @@ export default async function MessagesPage({ params: { profileId } }: Props) {
             ) : (
                 <div>
                     <p>keine neue Nachrichten</p>
-                    <h5>TODO: Archive component</h5>
                 </div>
             )}
+            <h5>Feature in V.2: Archive component</h5>
         </>
     );
 }
