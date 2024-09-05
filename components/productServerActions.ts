@@ -205,6 +205,13 @@ export async function searchProducts(
 
     // Step 2: Filter foodItems by distance
     const filteredFoodItems = foodItems.filter((foodItem) => {
+        if (
+            !foodItem.Location ||
+            !foodItem.Location.lat ||
+            !foodItem.Location.lng
+        ) {
+            return false;
+        }
         const foodItemLat = foodItem.Location!.lat;
         const foodItemLng = foodItem.Location!.lng;
         const distance = getDistanceFromLatLonInKm(

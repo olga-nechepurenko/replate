@@ -9,7 +9,7 @@ import SubmitButton from "./SubmitButton";
 export async function AddTransaction({ foodItemId }: { foodItemId: number }) {
     const foodItem = await prisma.foodItem.findUnique({
         where: {
-            id: foodItemId,
+            id: foodItemId ?? 0,
         },
         include: {
             Fridge: {
@@ -56,7 +56,6 @@ export async function AddTransaction({ foodItemId }: { foodItemId: number }) {
             }}
         >
             <SubmitButton
-                type="submit"
                 className="btn-take"
                 pendingContent="lege Transaction an.."
                 readyContent="RETTEN"

@@ -9,7 +9,7 @@ import FoodItemTeaser from "./FoodItemTeaser";
 type Props = {
     userProfile: UserWithLocation;
 };
-type FoodItemWithFridge = { Fridge: Fridge | null } & FoodItem;
+export type FoodItemWithFridge = { Fridge: Fridge | null } & FoodItem;
 
 export default function SearhComponent({ userProfile }: Props) {
     const defaultRadius = 10;
@@ -51,7 +51,7 @@ export default function SearhComponent({ userProfile }: Props) {
             </form>
             {foodItems.length > 0 ? (
                 <>
-                    <h4>Ich bin noch gut: productName</h4>
+                    <h4>Ich bin noch gut: {productName}</h4>
                     <div className="product-teasers grid">
                         {foodItems.map((foodItem) => (
                             <FoodItemTeaser

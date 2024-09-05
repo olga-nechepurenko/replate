@@ -1,7 +1,7 @@
 "use client";
 import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
-import SubmitButton from "./SubmitButton";
+
 import type { LatLng } from "@/types/location-types";
 import { IoCheckboxOutline } from "react-icons/io5";
 import { revalidatePath } from "next/cache";
@@ -11,6 +11,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 
 import LocationSearch from "./Registration/LocationSearch";
 import { sendMessage } from "./transactionServerActions";
+import SubmitButton from "./SubmitButton";
 
 type Props = {
     foodItemId: number;
