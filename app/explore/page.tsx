@@ -22,7 +22,6 @@ export default async function Home() {
         },
         include: {
             Fridge: true,
-            Location: true,
         },
     });
 

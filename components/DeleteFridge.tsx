@@ -13,16 +13,6 @@ export async function DeleteFridge({ id, userId }: Props) {
         <form
             className="btn-delete-fridge-list"
             action={async () => {
-                //TODO show confirm dialog "Are you sure?"; from server side
-                // const confirmed = window.confirm(
-                //     "Kühlschrank und alle Produkte löschen?"
-                // );
-                // if (confirmed) {
-
-                // } else {
-                //     // The user clicked "Cancel", so do nothing
-                //     console.log("Delete action canceled");
-                // }
                 //delete fridge and products
                 "use server";
                 await deleteFridge(id, userId);

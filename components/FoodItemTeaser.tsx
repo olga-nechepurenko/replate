@@ -1,10 +1,13 @@
-import type { FoodItem, Fridge } from "@prisma/client";
+import type { FoodItem, Fridge, Location } from "@prisma/client";
 import Link from "next/link";
 import { DeleteFridge } from "./DeleteFridge";
 import { getDistance, getUserLocation } from "@/lib/helpers";
 import axios from "redaxios";
+import { AddTransaction } from "./AddTransaction";
 
-type Props = FoodItem & { active: boolean };
+type Props = { Fridge: Fridge | null } & FoodItem & {
+        active: boolean;
+    };
 export default function FoodItemTeaser({
     title,
     quantity,
@@ -13,12 +16,9 @@ export default function FoodItemTeaser({
     id,
     locationId,
     active,
+    Fridge,
 }: Props) {
-    const defaultLocation = "Struttgart";
-    // const getCity= async (lat: number, lng: number) => {
-
-    // }
-
+    const defaultLocation = Fridge!.defaultLocation;
     const getDifferenceInDays = () => {
         const currentDate = new Date(); // Current date and time
         const targetDate = expirationDate; // target date
@@ -59,11 +59,7 @@ export default function FoodItemTeaser({
                     </>
                 )}
             </Link>
-            {active && (
-                <Link href={`/transaction/${id}`} className="btn-take">
-                    <button>RETEN</button>
-                </Link>
-            )}
+            {active && <AddTransaction foodItemId={id} />}
         </article>
     );
 }

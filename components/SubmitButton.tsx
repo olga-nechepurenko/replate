@@ -25,21 +25,7 @@ Bonus: Der Button soll alle erlaubten Attribute erhalten können.
 */
 
     return (
-        <button
-            type="submit"
-            disabled={pending}
-            {...atts}
-            // onClick={(e) => {
-            //     e.preventDefault();
-            //     const confirmed = window.confirm("Bist du dir sicher?");
-            //     if (confirmed) {
-            //         //e.currentTarget.submit();
-            //     } else {
-            //         // The user clicked "Cancel", so do nothing
-            //         console.log("Delete action canceled");
-            //     }
-            // }}
-        >
+        <button type="submit" disabled={pending} {...atts}>
             {pending ? pendingContent : readyContent}
         </button>
     );
