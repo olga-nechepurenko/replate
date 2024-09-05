@@ -5,14 +5,6 @@ import { revalidatePath } from "next/cache";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { wait } from "@/lib/helpers";
-// export async function serverTest(count: number) {
-//     console.log("Hallo auf dem Server!");
-
-//     return Math.pow(count, 2);
-// }
-
-
-
 
 export async function userInDb(email: string) {
     const user = await prisma.user.findUnique({
@@ -22,22 +14,7 @@ export async function userInDb(email: string) {
     });
     return user;
 }
-
-/* 1. Mit zfd ein Schema erstellen, dass zum Formular passt.
-https://www.npmjs.com/package/zod-form-data
-https://developer.mozilla.org/en-US/docs/Web/API/FormData
-	2. Mit der Schema-Methode safeParse formData parsen.
-	3. Die Daten in die Datenbank mit Hilfe von prisma eintragen
-	4. Bonus: Vor dem Eintragen mit einer weiteren Datenbankanfrage
-	prüfen, ob bereits ein Eintrag mit der Mailadresse existiert,
-	und nur dann den neuen Eintrag machen, wenn die Mailadresse
-	noch nicht in der Datenbank vorhanden ist.
-	*/
-
-/* Wichtig: Wenn das Formular useFormState nutzt, wird formData zum
-zweiten Parameter, der erste ist der Startwert von useFormData */
 export async function addUser(prevState: unknown, formData: FormData) {
-    console.log(formData.get("lat"));
     const schema = zfd.formData({
         name: zfd.text(z.string().max(100)),
         email: zfd.text(z.string().email()),
@@ -70,8 +47,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
         status: "success",
     };
 
-    await wait(4000);
-
     if (emailExists) {
         // Aus Datenschutzgründen nicht verraten, dass Mailadresse schon existiert
         return successMessage;
@@ -79,7 +54,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
 
     //find location with 2 parameter in db
     //check if location exists
-    console.log(Number(data.lat), Number(data.lng));
 
     const locationExists = await prisma.location.findFirst({
         where: {
@@ -150,6 +124,76 @@ export async function addUser(prevState: unknown, formData: FormData) {
     }
 
     revalidatePath("/register");
+
+    return successMessage;
+}
+
+export async function sendMessage(prevState: unknown, formData: FormData) {
+    const schema = zfd.formData({
+        senderId: zfd.text(z.coerce.number()),
+        recieverId: zfd.text(z.coerce.number()),
+        foodItemId: zfd.text(z.coerce.number()),
+        content: zfd.text(z.string().max(500).optional()),
+        messageId: zfd.text(z.coerce.number()),
+    });
+
+    const { success, data, error } = schema.safeParse(formData);
+
+    if (!success || data.recieverId === data.senderId) {
+        console.log(error);
+        return {
+            message: "Bitte überprüfen Sie Ihre Eingabe!",
+            status: "data-error",
+        };
+    }
+
+    const successMessage = {
+        message: "Message erfolgreich gesendet.",
+        status: "success",
+    };
+
+    //add message to db
+    await prisma.message
+        .create({
+            data: {
+                senderId: data.recieverId,
+                receiverId: data.senderId,
+                foodItemId: data.foodItemId,
+                content: data.content ?? "",
+                read: false,
+            },
+        })
+        .catch((error) => {
+            console.log(error);
+            return {
+                message: "ein Fehler aufgetretten",
+                status: "data-error",
+            };
+        });
+
+    //update old message as readed
+    if (data.messageId) {
+        //update message
+        await prisma.message
+            .update({
+                where: {
+                    id: data.messageId,
+                },
+                data: {
+                    read: true,
+                },
+            })
+            .catch((error) => {
+                console.log(error);
+                return {
+                    message: "ein Fehler aufgetretten",
+                    status: "data-error",
+                };
+            });
+    }
+
+    revalidatePath(`/messages/${data.senderId}`);
+    revalidatePath(`/messages/${data.recieverId}`);
 
     return successMessage;
 }

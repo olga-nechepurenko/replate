@@ -36,12 +36,6 @@ export default function AddProduct({ fridgeId }: Props) {
         }
     }, [formState]);
 
-    useEffect(() => {
-        if (formState.status === "success") {
-            formRef.current.reset();
-        }
-    }, [formState]);
-
     return (
         <>
             <article className="add-product">

@@ -6,10 +6,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteProduct } from "./DeleteProduct";
 
-export const metadata: Metadata = {
-    title: "Fridge",
-};
-
 type Props = {
     id: number;
     title: string;
@@ -17,7 +13,7 @@ type Props = {
     category: string;
     quantity: number;
     expirationDate: Date;
-    location: string | null;
+    //location: string | null;
     photo: string | null;
     createdAt: Date;
     updatedAt: Date;

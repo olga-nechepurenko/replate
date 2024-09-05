@@ -46,6 +46,29 @@ dd {
     }
 }
 
+.message-in-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    box-shadow: var(--shadow-3);
+    padding: 4px;
+    margin-block: var(--size-fluid-2);
+
+    button {
+        align-self: flex-end;
+    }
+
+    .form-full {
+        grid-column-start: 1;
+        grid-column-end: span 5;
+        grid-row-start: 2;
+        grid-row-end: span 1;
+    }
+}
+
 .btn-delete-fridge-list {
     width: 100%;
     text-align: right;

@@ -17,6 +17,9 @@ a {
         background-color: var(--body-background);
         color: var(--button-background-color);
     }
+    .main-navigation__button {
+        min-width: 220px;
+    }
 }
 .main-navigation__list {
     display: flex;

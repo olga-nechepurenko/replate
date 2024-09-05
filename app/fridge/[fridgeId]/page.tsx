@@ -4,9 +4,10 @@ import type { Metadata } from "next";
 import { capitalize } from "es-toolkit";
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/db";
-import ProductInFridge from "@/components/ProductInFridge";
+
 import { IoAddCircleOutline } from "react-icons/io5";
 import AddProduct from "@/components/AddProduct";
+import ProductInFridge from "@/components/ProductInFridge";
 
 type Props = {
     params: {
@@ -36,7 +37,7 @@ export default async function SingleFridgePage({
 
     return (
         <div>
-            <h1 className="capitalize">{fridge.fridgeTitle}</h1>
+            <h3 className="capitalize">{fridge.fridgeTitle}</h3>
             {fridge.defaultLocation && (
                 <>
                     <strong>Ort: {fridge.defaultLocation}</strong>
