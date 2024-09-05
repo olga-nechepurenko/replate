@@ -69,17 +69,15 @@ export default async function UserTransactionsPage({
     return (
         <div className="content-padding">
             <h2>Meine Transactions</h2>
-            {!giveTransactions?.length ||
-            giveTransactions?.length === 0 ||
-            !takeTransactions?.length ||
-            takeTransactions?.length === 0 ? (
+            {(!giveTransactions?.length || giveTransactions?.length === 0) &&
+            (!takeTransactions?.length || takeTransactions?.length === 0) ? (
                 <p>(keine Transactions vorhanden)</p>
             ) : (
                 <></>
             )}
 
             <div>
-                {giveTransactions?.length && giveTransactions?.length > 0 && (
+                {giveTransactions?.length && giveTransactions?.length > 0 ? (
                     <>
                         <dt>
                             <h4>Verschenken:</h4>
@@ -95,7 +93,7 @@ export default async function UserTransactionsPage({
                             ))}
                         </dd>
                     </>
-                )}
+                ) : null}
             </div>
 
             <div>

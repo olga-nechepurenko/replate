@@ -7,6 +7,8 @@ import UserNavigation from "./UserNavigation";
 import { DeleteProfile } from "./Registration/DeleteProfile";
 import { userInDb } from "./Registration/registrationServerActions";
 import Link from "next/link";
+import { revalidate } from "@/app/profile/[profileId]/page";
+import { MessagesWidget } from "./MessagesWidget";
 
 export default async function Header() {
     const session = await auth();
@@ -20,7 +22,6 @@ export default async function Header() {
         <header className="grid-container">
             <div className="grid-item">
                 <Link href={"/"}>
-                    {" "}
                     <Image
                         alt="meal"
                         src={logo}
@@ -31,16 +32,19 @@ export default async function Header() {
             </div>
             <div className="grid-item-user">
                 {session ? (
-                    <UserNavigation
-                        {...session.user}
-                        profileId={profileId}
-                        slot={
-                            <>
-                                <DeleteProfile email={email} />
-                                <SignOut />
-                            </>
-                        }
-                    />
+                    <>
+                        <MessagesWidget email={email} />
+                        <UserNavigation
+                            {...session.user}
+                            profileId={profileId}
+                            slot={
+                                <>
+                                    <DeleteProfile email={email} />
+                                    <SignOut />
+                                </>
+                            }
+                        />
+                    </>
                 ) : (
                     <SignIn />
                 )}
