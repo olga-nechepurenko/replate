@@ -1,15 +1,7 @@
 "use client";
+
 import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
-
-import type { LatLng } from "@/types/location-types";
-import { IoCheckboxOutline } from "react-icons/io5";
-import { revalidatePath } from "next/cache";
-import Link from "next/link";
-
-import { IoAddCircleOutline } from "react-icons/io5";
-
-import LocationSearch from "./Registration/LocationSearch";
 import { sendMessage } from "./transactionServerActions";
 import SubmitButton from "./SubmitButton";
 

@@ -4,12 +4,6 @@ import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
-import { wait } from "@/lib/helpers";
-// export async function serverTest(count: number) {
-//     console.log("Hallo auf dem Server!");
-
-//     return Math.pow(count, 2);
-// }
 
 export async function userInDb(email: string) {
     const user = await prisma.user.findUnique({
@@ -20,19 +14,6 @@ export async function userInDb(email: string) {
     return user;
 }
 
-/* 1. Mit zfd ein Schema erstellen, dass zum Formular passt.
-https://www.npmjs.com/package/zod-form-data
-https://developer.mozilla.org/en-US/docs/Web/API/FormData
-	2. Mit der Schema-Methode safeParse formData parsen.
-	3. Die Daten in die Datenbank mit Hilfe von prisma eintragen
-	4. Bonus: Vor dem Eintragen mit einer weiteren Datenbankanfrage
-	prüfen, ob bereits ein Eintrag mit der Mailadresse existiert,
-	und nur dann den neuen Eintrag machen, wenn die Mailadresse
-	noch nicht in der Datenbank vorhanden ist.
-	*/
-
-/* Wichtig: Wenn das Formular useFormState nutzt, wird formData zum
-zweiten Parameter, der erste ist der Startwert von useFormData */
 export async function addUser(prevState: unknown, formData: FormData) {
     if (!formData.get("email")) {
         return {
@@ -80,7 +61,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
 
     //find location with 2 parameter in db
     //check if location exists
-
     const locationExists = await prisma.location.findFirst({
         where: {
             AND: [

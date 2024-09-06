@@ -21,8 +21,6 @@ export default async function ShowFridges({ email }: { email: string }) {
         },
     });
 
-    console.log(fridges.length);
-
     if (!fridges || fridges.length === 0) {
         return;
     }
@@ -36,18 +34,6 @@ export default async function ShowFridges({ email }: { email: string }) {
             </>
         );
     }
-
-    // if (profile.locationId && profile.locationId !== null) {
-    //     const fridge = await prisma.fridge.create({
-    //         data: {
-    //             fridgeTitle: "Home",
-    //             userId: profile.id,
-    //             locationId: profile.locationId,
-    //             defaultLocation: profile.defaultLocation,
-    //         },
-    //     });
-    //     console.log(fridge);
-    // }
 
     return (
         <>

@@ -52,8 +52,6 @@ export default function SearhComponent({ userProfile }: Props) {
             foodItems = await searchProductsWithoutRadius(productName);
             setFoodItems(foodItems);
         }
-
-        //setFoodItems(foodItems);
     };
 
     return (

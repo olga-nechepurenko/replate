@@ -1,7 +1,6 @@
 "use server";
 
 import prisma from "@/prisma/db";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function DeleteProfile({ email }: { email: string }) {
@@ -35,18 +34,6 @@ async function deleteUser(id: number) {
         .catch((err) => {
             console.log(err);
         });
-    //if (user.locationId) {
-    //     await prisma.location
-    //         .delete({
-    //             where: {
-    //                 id: user.locationId,
-    //             },
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // }
-
     await prisma.user.delete({
         where: {
             id,

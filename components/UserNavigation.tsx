@@ -5,7 +5,6 @@ import { useToggle } from "@/lib/hooks/useToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { MessagesWidget } from "./MessagesWidget";
 
 type Props = GitHubUser & { slot?: ReactNode } & { profileId?: number | null };
 export default function UserNavigation({
@@ -16,9 +15,7 @@ export default function UserNavigation({
     profileId,
 }: Props) {
     const [isOpen, toogleMenu, , , closeMenu] = useToggle(false);
-
     const pathname = usePathname();
-    /* Wenn pathname sich ändert, soll das Menü geschlossen werden. */
 
     useEffect(closeMenu, [pathname]);
     return (

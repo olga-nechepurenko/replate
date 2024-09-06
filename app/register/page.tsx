@@ -1,14 +1,9 @@
-// import ProductTeaser from '@/components/ProductTeaser';
-// import type { Product } from '@/types/shop-types';
-// import type { Metadata } from 'next';
-
 import { auth } from "@/auth";
 import { SignIn } from "@/components/Auth/SignIn";
 import RegistratingForm from "@/components/Registration/RegistratingForm";
 import { userInDb } from "@/components/Registration/registrationServerActions";
 import ShowFridges from "@/components/Registration/ShowFridges";
-import prisma from "@/prisma/db";
-import { useState } from "react";
+
 import { IoCheckboxOutline } from "react-icons/io5";
 
 const session = await auth();

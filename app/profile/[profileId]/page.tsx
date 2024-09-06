@@ -1,4 +1,3 @@
-//import EventTeaser from "@/components/Veranstaltungen/EventTeaser";
 import { auth } from "@/auth";
 import FridgeTeaser from "@/components/FridgeTeaser";
 import prisma from "@/prisma/db";
@@ -29,11 +28,9 @@ export default async function ProfilePage({ params: { profileId } }: Props) {
         notFound();
     }
 
-    //const nextEvents = await getNextEventsInVenue(venueId, id);
     return (
         <article>
             <h1>{profile.username}</h1>
-            {/* Falls vorhanden, hier description in p-Element darstellen */}
             {profile.bio && <p>{profile.bio}</p>}
             <dl>
                 <dt>Ort</dt>
@@ -100,7 +97,3 @@ export async function generateMetadata({
         title: `rePlate - ${profile.username}`,
     };
 }
-
-/* Dies Funktion soll die nächsten Veranstaltungen im selben
-Veranstaltungsort wie die angezeigte Veranstaltung aus der Datenbank
-holen. Die angezeigte Veranstaltung soll dabei ignoriert werden.  */

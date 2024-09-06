@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
-import { capitalize } from "es-toolkit";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import prisma from "@/prisma/db";
-import FridgeTeaser from "@/components/FridgeTeaser";
-import AddFridge from "@/components/AddFridge";
 import MessageComponent from "@/components/MessageComponent";
 import AddAnswerForm from "@/components/AddAnswerForm";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
-    title: "Messages",
+    title: "meine Messages",
 };
-
 type Props = {
     params: {
         profileId: string;

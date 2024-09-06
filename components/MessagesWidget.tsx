@@ -2,7 +2,6 @@
 
 import prisma from "@/prisma/db";
 import type { User } from "@prisma/client";
-import { log } from "console";
 import Link from "next/link";
 
 type Props = {

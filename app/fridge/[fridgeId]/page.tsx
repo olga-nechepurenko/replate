@@ -1,11 +1,6 @@
-//import ProductTeaser from '@/components/ProductTeaser';
-//import type { Product } from '@/types/shop-types';
-import type { Metadata } from "next";
-import { capitalize } from "es-toolkit";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/prisma/db";
 
-import { IoAddCircleOutline } from "react-icons/io5";
 import AddProduct from "@/components/AddProduct";
 import ProductInFridge from "@/components/ProductInFridge";
 import { auth } from "@/auth";
@@ -53,7 +48,6 @@ export default async function SingleFridgePage({
                 <h4>Produkte:</h4>
             </dt>
             <dd>
-                {/* add products */}
                 <AddProduct fridgeId={Number(fridge.id)} />
             </dd>
             {fridge?.foodItems?.length > 0 ? (

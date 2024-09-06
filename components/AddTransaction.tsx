@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { userInDb } from "./Registration/registrationServerActions";
-//import SubmitButton from "./SubmitButton";
 
 type Props = {
     foodItemId?: number;
@@ -62,11 +61,6 @@ export async function AddTransaction({ foodItemId }: Props) {
                 );
             }}
         >
-            {/* <SubmitButton
-                className="btn-take"
-                pendingContent="lege Transaction an.."
-                readyContent="RETTEN"
-            /> */}
             <button className="btn-take">RETTEN</button>
         </form>
     );
@@ -133,6 +127,8 @@ async function createTransaction(
         });
 
     revalidatePath(`/explore`);
+    revalidatePath(`/`);
+    revalidatePath(`/transactions/${currentUserId}`);
 
     return;
 }

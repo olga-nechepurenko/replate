@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import prisma from "@/prisma/db";
 import FoodItemTeaser from "@/components/FoodItemTeaser";
 import type { FoodItem, Fridge } from "@prisma/client";
-import { userInDb } from "@/components/transactionServerActions";
 import SearchComponent from "@/components/SearchComponent";
 import type { UserWithLocation } from "../page";
 
@@ -36,7 +35,6 @@ export default async function Home() {
     let profile = null;
     if (session) {
         //get userId from db
-        //const profile = await userInDb(session.user.email);
         profile = (await prisma.user.findUnique({
             where: {
                 email: session.user.email,

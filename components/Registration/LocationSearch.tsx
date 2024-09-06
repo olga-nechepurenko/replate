@@ -7,7 +7,6 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 type Props = {
     setUserLocation: Dispatch<SetStateAction<LatLng | null>>;
-    //mapReset: () => void;
 };
 export default function LocationSearch({ setUserLocation }: Props) {
     const [term, setTerm] = useState("");
@@ -46,7 +45,8 @@ export default function LocationSearch({ setUserLocation }: Props) {
         onSelectedItemChange: handleSelection,
     });
 
-    function clearSearch() {
+    function clearSearch(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
         setTerm("");
         reset();
     }
@@ -132,10 +132,3 @@ function useLocationSearch(
         };
     }, [debouncedTerm, setSuggestions]);
 }
-
-/* 1.Nutzt den useDebouncedValue-Hook,
- um den Wert von term verzögert in die Variable debouncedTerm zu speichern. */
-
-/* 2. useEffect, redaxios und debouncedTerm nutzen, um Schnittstelle
-  anzufragen und das Ergebnis in den State suggestions zu speichern. Prüft,
-  ob mindestens zwei Zeichen eingegeben wurden. */

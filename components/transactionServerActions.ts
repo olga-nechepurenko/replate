@@ -4,7 +4,6 @@ import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
-import { wait } from "@/lib/helpers";
 
 export async function userInDb(email: string) {
     const user = await prisma.user.findUnique({
@@ -54,7 +53,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
 
     //find location with 2 parameter in db
     //check if location exists
-
     const locationExists = await prisma.location.findFirst({
         where: {
             AND: [

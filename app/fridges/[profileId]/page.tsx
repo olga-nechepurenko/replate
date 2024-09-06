@@ -1,12 +1,13 @@
-//import ProductTeaser from '@/components/ProductTeaser';
-//import type { Product } from '@/types/shop-types';
-import type { Metadata } from "next";
-import { capitalize } from "es-toolkit";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/prisma/db";
 import FridgeTeaser from "@/components/FridgeTeaser";
 import AddFridge from "@/components/AddFridge";
 import { auth } from "@/auth";
+import type { Metadata } from "next/types";
+
+export const metadata: Metadata = {
+    title: "meine Kühlschränke",
+};
 
 type Props = {
     params: {
@@ -34,7 +35,7 @@ export default async function FridgesPage({ params: { profileId } }: Props) {
 
     return (
         <div>
-            <h1 className="capitalize">Meine Kühlschränken</h1>
+            <h1>Meine Kühlschränken</h1>
             <div className="product-teasers grid">
                 {fridges.map((fridge) => (
                     <FridgeTeaser key={fridge.id} {...fridge} />

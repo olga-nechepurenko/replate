@@ -50,7 +50,6 @@ export default function FoodItemTeaser({
     };
 
     const daysDifference = getDifferenceInDays();
-    console.log("id", id);
 
     const handleAddTransaction = async (event: React.FormEvent) => {
         event.preventDefault();

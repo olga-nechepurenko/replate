@@ -1,13 +1,4 @@
-import { getFormattedPrice } from "@/lib/helpers";
-import { randomInt } from "es-toolkit";
-
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { DeleteProduct } from "./DeleteProduct";
 import type { FoodItem, Message, User } from "@prisma/client";
-import { useState } from "react";
-import AddAnswerForm from "./AddAnswerForm";
 
 type Props = {
     sender?: User | null;

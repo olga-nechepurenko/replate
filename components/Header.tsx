@@ -7,13 +7,11 @@ import UserNavigation from "./UserNavigation";
 import { DeleteProfile } from "./Registration/DeleteProfile";
 import { userInDb } from "./Registration/registrationServerActions";
 import Link from "next/link";
-import { revalidate } from "@/app/profile/[profileId]/page";
 import { MessagesWidget } from "./MessagesWidget";
 
 export default async function Header() {
     const session = await auth();
     const email = session?.user?.email ?? "";
-
     const profile = await userInDb(email);
     const profileId = profile?.id ?? null;
 

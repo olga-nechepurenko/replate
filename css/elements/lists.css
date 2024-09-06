@@ -91,7 +91,6 @@ dd {
     grid-template-columns: 1fr;
     align-items: center;
     box-shadow: var(--shadow-3);
-    //padding: var(--size-fluid-2);
     margin-block: var(--size-fluid-2);
 
     .add-product__link {

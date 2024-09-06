@@ -26,14 +26,8 @@ a {
     flex-direction: column;
     align-items: flex-end;
     list-style: none;
-    //background-color: rgb(255, 255, 255);
     gap: 0.5em;
-    //padding: var(--size-fluid-3);
     margin: 10px;
-    /* position: absolute;
-    top: 100%;
-    right: 0;
-    left: 0; */
 }
 
 .button-navigation-list {

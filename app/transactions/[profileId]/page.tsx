@@ -120,7 +120,7 @@ export default async function UserTransactionsPage({
                     </>
                 )}
 
-                <h4>TODO: Archive component</h4>
+                <h4>Feature: Archive component in V.2</h4>
             </div>
         </div>
     );
