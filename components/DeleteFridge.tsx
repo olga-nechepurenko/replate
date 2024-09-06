@@ -16,6 +16,7 @@ export async function DeleteFridge({ id, userId }: Props) {
                 //delete fridge and products
                 "use server";
                 await deleteFridge(id, userId);
+                revalidatePath(`/fridges/${userId}`);
             }}
         >
             <button type="submit">löschen</button>

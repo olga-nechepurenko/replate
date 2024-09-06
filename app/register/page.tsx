@@ -19,7 +19,7 @@ export default async function RegistratingPage() {
 
     return (
         <div>
-            <h1>Willkommen zu rePlate!</h1>
+            <h1>WILLKOMMEN zu rePLATE!</h1>
             <p>um in 5 Minuten loszulegen, folge den Anweisungen:</p>
             <h3>1. SignIn mit deinem Konto:</h3>
             {session ? (

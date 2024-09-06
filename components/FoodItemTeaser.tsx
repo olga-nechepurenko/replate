@@ -1,19 +1,11 @@
 "use client";
-import type { FoodItem, Fridge, Location } from "@prisma/client";
-import Link from "next/link";
-import { AddTransaction } from "./AddTransaction";
-import type { ReactNode } from "react";
+
+import type { Fridge } from "@prisma/client";
 import SubmitButton from "./SubmitButton";
-import { auth } from "@/auth";
-import { userInDb } from "./Registration/registrationServerActions";
 import {
     createTransaction,
     getFoodItemWithUserlocation,
 } from "./transactionServerActions";
-
-// type Props = { Fridge: Fridge | null } & FoodItem & {
-//         active: boolean;
-//     };
 
 type Props = {
     id: number;
@@ -29,8 +21,8 @@ type Props = {
     Fridge: Fridge | null;
     active: boolean;
     key: number;
-    username: string;
-    userid: number;
+    username?: string | null;
+    userid?: number | null;
 };
 export default function FoodItemTeaser({
     title,
@@ -64,24 +56,13 @@ export default function FoodItemTeaser({
         event.preventDefault();
 
         const foodItem = await getFoodItemWithUserlocation(id);
-        // prisma.foodItem.findUnique({
-        //     where: {
-        //         id,
-        //     },
-        //     include: {
-        //         Fridge: {
-        //             include: {
-        //                 Location: true,
-        //                 User: true,
-        //             },
-        //         },
-        //     },
-        // });
-
-        // const session = await auth();
-        // const userEmail = session?.user.email ?? "";
-        // const currentUserProfile = await userInDb(userEmail);
-        if (!foodItem || !foodItem.Fridge || !foodItem.Fridge.User) {
+        if (
+            !foodItem ||
+            !foodItem.Fridge ||
+            !foodItem.Fridge.User ||
+            !userid ||
+            !username
+        ) {
             return;
         }
         await createTransaction(

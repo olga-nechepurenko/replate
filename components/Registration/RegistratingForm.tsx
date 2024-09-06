@@ -1,6 +1,5 @@
 "use client";
 import { useFormState } from "react-dom";
-//import classes from "./PetitionForm.module.css";
 
 import { useEffect, useRef, useState } from "react";
 import SubmitButton from "../SubmitButton";
@@ -8,7 +7,6 @@ import { addUser } from "./registrationServerActions";
 import LocationSearch from "./LocationSearch";
 import type { LatLng } from "@/types/location-types";
 import { IoCheckboxOutline } from "react-icons/io5";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
 type Props = {
@@ -41,11 +39,8 @@ export default function RegistratingForm({
     const id = user?.id;
     const [userLocation, setUserLocation] = useState<LatLng | null>(null);
 
-    /* Nutzt useEffect, um das Formularelement mit der Formularmethode
-	reset() zurückzusetzen, falls der Status in formState "success" ist. */
     useEffect(() => {
         if (formState.status === "success") {
-            //formRef.current.reset();
             setUserLocation(null);
         }
     }, [formState]);
@@ -62,9 +57,13 @@ export default function RegistratingForm({
                     <Link href={`/profile/${id}`}>zum Profil</Link>
                 </div>
             ) : (
-                <form action={formAction} ref={formRef}>
+                <form
+                    className="registration-form"
+                    action={formAction}
+                    ref={formRef}
+                >
                     {formState.status !== "success" && (
-                        <div>
+                        <>
                             <input
                                 type="hidden"
                                 name="lat"
@@ -75,8 +74,17 @@ export default function RegistratingForm({
                                 name="lng"
                                 value={userLocation?.lng}
                             />
-                            <div>
+                            <input
+                                id="email"
+                                name="email"
+                                type="hidden"
+                                value={email}
+                                required
+                            />
+
+                            <div className="input-name">
                                 <label htmlFor="name">Name</label>
+
                                 <input
                                     id="name"
                                     name="name"
@@ -85,19 +93,13 @@ export default function RegistratingForm({
                                     required
                                 />
                             </div>
-                            <input
-                                id="email"
-                                name="email"
-                                type="hidden"
-                                value={email}
-                                required
-                            />
+
                             <div>
                                 <LocationSearch
                                     setUserLocation={setUserLocation}
                                 />
                             </div>
-                            <div>
+                            <div className="input-name">
                                 <label htmlFor="bio">Über mich</label>
                                 <textarea
                                     id="bio"
@@ -108,11 +110,12 @@ export default function RegistratingForm({
                                     defaultValue={""}
                                 />
                             </div>
-                        </div>
+                        </>
                     )}
                     {formState.status !== "success" && (
                         <label>
                             <input
+                                className="checkbox"
                                 type="checkbox"
                                 name="privacy"
                                 value="accept"

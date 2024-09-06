@@ -71,12 +71,6 @@ export default function SearhComponent({ userProfile }: Props) {
                     </h4>
                     <div className="product-teasers grid">
                         {foodItems.map((foodItem) => (
-                            // <FoodItemTeaser
-                            //     key={foodItem.id!}
-                            //     {...foodItem}
-                            //     active={true}
-                            // />
-
                             <FoodItemTeaser
                                 key={foodItem.id! as number}
                                 title={foodItem.title}

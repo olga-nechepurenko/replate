@@ -15,7 +15,8 @@ export const metadata = {
 export default async function Home() {
     type FoodItemWithFridge = FoodItem & { Fridge: Fridge | null };
     let foodItems: FoodItemWithFridge[] = [];
-
+    let username: unknown = null;
+    let userid: unknown = null;
     const session = await auth();
     if (!session) {
         //find 20 foodItems with no expired date to display examples
@@ -37,6 +38,8 @@ export default async function Home() {
         const profile = await userInDb(session.user.email);
 
         if (profile !== null) {
+            username = profile.username;
+            userid = profile.id;
             //find 20 foodItems with no expired date and not from user to display
             foodItems = await prisma.foodItem.findMany({
                 take: 20,
@@ -69,10 +72,27 @@ export default async function Home() {
             <h2>Ich bin noch gut!</h2>
             <div className="product-teasers grid">
                 {foodItems.map((foodItem) => (
+                    // <FoodItemTeaser
+                    //     key={foodItem.id}
+                    //     {...foodItem}
+                    //     active={!!session}
+                    // />
                     <FoodItemTeaser
-                        key={foodItem.id}
-                        {...foodItem}
-                        active={!!session}
+                        key={foodItem.id! as number}
+                        title={foodItem.title}
+                        quantity={foodItem.quantity}
+                        expirationDate={foodItem.expirationDate}
+                        description={foodItem.description}
+                        id={foodItem.id}
+                        locationId={foodItem.locationId}
+                        Fridge={foodItem.Fridge}
+                        active={false}
+                        category={foodItem.category}
+                        photo={foodItem.photo}
+                        createdAt={foodItem.createdAt}
+                        updatedAt={foodItem.updatedAt}
+                        username={username as string | null}
+                        userid={userid as number | null}
                     />
                 ))}
             </div>

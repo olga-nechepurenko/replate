@@ -34,7 +34,13 @@ https://developer.mozilla.org/en-US/docs/Web/API/FormData
 /* Wichtig: Wenn das Formular useFormState nutzt, wird formData zum
 zweiten Parameter, der erste ist der Startwert von useFormData */
 export async function addUser(prevState: unknown, formData: FormData) {
-    console.log(formData.get("lat"));
+    if (!formData.get("email")) {
+        return {
+            message: "Bitte melden Sie sich zuerst an!",
+            status: "data-error",
+        };
+    }
+
     const schema = zfd.formData({
         name: zfd.text(z.string().max(100)),
         email: zfd.text(z.string().email()),
@@ -67,8 +73,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
         status: "success",
     };
 
-    await wait(4000);
-
     if (emailExists) {
         // Aus Datenschutzgründen nicht verraten, dass Mailadresse schon existiert
         return successMessage;
@@ -76,7 +80,6 @@ export async function addUser(prevState: unknown, formData: FormData) {
 
     //find location with 2 parameter in db
     //check if location exists
-    console.log(Number(data.lat), Number(data.lng));
 
     const locationExists = await prisma.location.findFirst({
         where: {

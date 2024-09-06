@@ -4,7 +4,6 @@ import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
-import type { title } from "process";
 
 export async function addProduct(prevState: unknown, formData: FormData) {
     const schema = zfd.formData({
@@ -87,7 +86,7 @@ export async function deleteProduct(id: number, fridgeId: number | null) {
     return successMessage;
 }
 export async function addFridge(prevState: unknown, formData: FormData) {
-    console.log(formData.get("lat"));
+    console.log(formData);
     const schema = zfd.formData({
         name: zfd.text(z.string().max(100)),
         lat: zfd.text(z.coerce.number().positive()),

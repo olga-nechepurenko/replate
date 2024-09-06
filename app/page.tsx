@@ -2,7 +2,6 @@ import Image from "next/image";
 import meal from "@/images/pexels-photo-4871119.webp";
 import Link from "next/link";
 import { auth } from "@/auth";
-import { userInDb } from "@/components/Registration/registrationServerActions";
 import SearchComponent from "@/components/SearchComponent";
 import prisma from "@/prisma/db";
 import type { Location, User } from "@prisma/client";
@@ -36,7 +35,7 @@ export default async function Home() {
                         />
                     </div>
                     <div className="button-navigation-list">
-                        <h2>Willkommen zu rePlate</h2>
+                        <h2>WILLKOMMEN zu rePLATE</h2>
                         <ul>
                             <li>
                                 <Link href="/register">Start sharing</Link>

@@ -1,15 +1,10 @@
 "use client";
+
 import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import SubmitButton from "./SubmitButton";
-import type { LatLng } from "@/types/location-types";
-import { IoCheckboxOutline } from "react-icons/io5";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
-
 import { IoAddCircleOutline } from "react-icons/io5";
-
-import LocationSearch from "./Registration/LocationSearch";
 import { addProduct } from "./productServerActions";
 
 type Props = {
@@ -33,6 +28,8 @@ export default function AddProduct({ fridgeId }: Props) {
         if (formState.status === "success") {
             formRef.current.reset();
             setFormVisible(false);
+            formState.message = "";
+            window.location.reload();
         }
     }, [formState]);
 
@@ -44,7 +41,7 @@ export default function AddProduct({ fridgeId }: Props) {
                         <form action={formAction} ref={formRef}>
                             {formState.status !== "success" && (
                                 <div>
-                                    <div>
+                                    <div className="input-name">
                                         <label htmlFor="name">Titel</label>
                                         <input
                                             id="name"
@@ -60,7 +57,7 @@ export default function AddProduct({ fridgeId }: Props) {
                                         value={fridgeId}
                                         required
                                     />
-                                    <div>
+                                    <div className="input-name">
                                         <label htmlFor="description">
                                             Beschreibung
                                         </label>
@@ -73,7 +70,7 @@ export default function AddProduct({ fridgeId }: Props) {
                                             defaultValue={""}
                                         />
                                     </div>
-                                    <div>
+                                    <div className="input-name">
                                         <label htmlFor="quantity">Mänge</label>
                                         <input
                                             id="quantity"
@@ -83,7 +80,7 @@ export default function AddProduct({ fridgeId }: Props) {
                                             required
                                         />
                                     </div>
-                                    <div>
+                                    <div className="input-name">
                                         <label htmlFor="expired">
                                             Ablaufdatum
                                         </label>
@@ -111,6 +108,7 @@ export default function AddProduct({ fridgeId }: Props) {
                     <Link
                         className="add-product__link"
                         href=""
+                        scroll={false}
                         onClick={handleOpenClick}
                     >
                         <h3>

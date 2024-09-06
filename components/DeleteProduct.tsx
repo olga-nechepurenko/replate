@@ -14,6 +14,7 @@ export async function DeleteProduct({ id, fridgeId }: Props) {
             action={async () => {
                 "use server";
                 await deleteProduct(id, fridgeId);
+                revalidatePath(`/fridge/${fridgeId}`);
             }}
         >
             <button type="submit">löschen</button>
