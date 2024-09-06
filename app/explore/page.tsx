@@ -16,6 +16,7 @@ export default async function Home() {
     let foodItems: FoodItemWithFridge[] = [];
     let username: unknown = null;
     let userid: unknown = null;
+    let active: boolean = false;
     const session = await auth();
     if (!session) {
         //find 20 foodItems with no expired date to display examples
@@ -45,6 +46,7 @@ export default async function Home() {
         })) as UserWithLocation | null;
 
         if (profile && profile !== null) {
+            active = true;
             username = profile.username;
             userid = profile.id;
             //find 20 foodItems with no expired date and not from user to display
@@ -97,7 +99,7 @@ export default async function Home() {
                         id={foodItem.id}
                         locationId={foodItem.locationId}
                         Fridge={foodItem.Fridge}
-                        active={false}
+                        active={active}
                         category={foodItem.category}
                         photo={foodItem.photo}
                         createdAt={foodItem.createdAt}
