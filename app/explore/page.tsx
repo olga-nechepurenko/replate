@@ -1,11 +1,11 @@
-import Image from "next/image";
-import meal from "@/images/pexels-photo-4871119.webp";
 import Link from "next/link";
 import { auth } from "@/auth";
 import prisma from "@/prisma/db";
 import FoodItemTeaser from "@/components/FoodItemTeaser";
 import type { FoodItem, Fridge } from "@prisma/client";
 import { userInDb } from "@/components/transactionServerActions";
+import SearchComponent from "@/components/SearchComponent";
+import type { UserWithLocation } from "../page";
 
 export const metadata = {
     title: "RePlate - Explore",
@@ -33,11 +33,20 @@ export default async function Home() {
         });
     }
 
+    let profile = null;
     if (session) {
         //get userId from db
-        const profile = await userInDb(session.user.email);
+        //const profile = await userInDb(session.user.email);
+        profile = (await prisma.user.findUnique({
+            where: {
+                email: session.user.email,
+            },
+            include: {
+                Location: true,
+            },
+        })) as UserWithLocation | null;
 
-        if (profile !== null) {
+        if (profile && profile !== null) {
             username = profile.username;
             userid = profile.id;
             //find 20 foodItems with no expired date and not from user to display
@@ -68,15 +77,19 @@ export default async function Home() {
 
     return (
         <>
-            {/* <p>Suche</p> */}
+            {session !== null ? (
+                <SearchComponent userProfile={profile as UserWithLocation} />
+            ) : (
+                <SearchComponent userProfile={null} />
+            )}
             <h2>Ich bin noch gut!</h2>
+            {!session && (
+                <p>
+                    um loszulegen, <Link href="/register">MELDE DICH AN</Link>
+                </p>
+            )}
             <div className="product-teasers grid">
                 {foodItems.map((foodItem) => (
-                    // <FoodItemTeaser
-                    //     key={foodItem.id}
-                    //     {...foodItem}
-                    //     active={!!session}
-                    // />
                     <FoodItemTeaser
                         key={foodItem.id! as number}
                         title={foodItem.title}

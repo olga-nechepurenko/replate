@@ -173,6 +173,32 @@ export async function addFridge(prevState: unknown, formData: FormData) {
     return successMessage;
 }
 
+export async function searchProductsWithoutRadius(productName: string) {
+    if (!productName) {
+        return [];
+    }
+
+    // Step 1: Search foodItems by name
+    const foodItems = await prisma.foodItem
+        .findMany({
+            where: {
+                title: {
+                    contains: String(productName), // Find food Item names that contain the search term
+                    mode: "insensitive", // Case-insensitive search
+                },
+            },
+            include: {
+                Location: true,
+                Fridge: true,
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+            return [];
+        });
+    return foodItems;
+}
+
 export async function searchProducts(
     productName: string,
     userLat: number,
