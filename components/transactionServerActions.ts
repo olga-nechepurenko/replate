@@ -197,3 +197,91 @@ export async function sendMessage(prevState: unknown, formData: FormData) {
 
     return successMessage;
 }
+
+export async function createTransaction(
+    foodItemId: number,
+    giverId: number | null,
+    currentUserId: number | null,
+    foodItemTitle: string,
+    giverName: string | null,
+    currentUsername: string | null
+) {
+    if (
+        !giverId ||
+        !currentUserId ||
+        !foodItemId ||
+        giverId === currentUserId
+    ) {
+        return;
+    }
+
+    //check if transaction already exists
+    const transactionExists = await prisma.transaction.findFirst({
+        where: {
+            foodItemId,
+            receiverId: currentUserId,
+        },
+    });
+
+    if (transactionExists) {
+        return;
+    }
+
+    //create transaction
+    await prisma.transaction
+        .create({
+            data: {
+                foodItemId,
+                giverId,
+                receiverId: currentUserId,
+                status: "PENDING",
+                transactionDate: new Date(),
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+    //create message
+    await prisma.message
+        .create({
+            data: {
+                content: `Hey ${giverName ?? ""}! Ich würde gerne ${
+                    foodItemTitle ?? "das Product"
+                } retten! Gib mir Bescheid wann und wo! Libe Grüße ${currentUsername}!`,
+                senderId: currentUserId,
+                receiverId: giverId,
+                foodItemId,
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+    revalidatePath(`/explore`);
+
+    return;
+}
+
+export async function getFoodItemWithUserlocation(id: number) {
+    const foodItem = await prisma.foodItem
+        .findUnique({
+            where: {
+                id,
+            },
+            include: {
+                Fridge: {
+                    include: {
+                        Location: true,
+                        User: true,
+                    },
+                },
+            },
+        })
+        .catch((err) => {
+            console.log(err);
+            return null;
+        });
+
+    return foodItem;
+}

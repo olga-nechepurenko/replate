@@ -4,9 +4,16 @@ import { auth } from "@/auth";
 import prisma from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { userInDb } from "./Registration/registrationServerActions";
-import SubmitButton from "./SubmitButton";
+//import SubmitButton from "./SubmitButton";
 
-export async function AddTransaction({ foodItemId }: { foodItemId: number }) {
+type Props = {
+    foodItemId?: number;
+};
+
+export async function AddTransaction({ foodItemId }: Props) {
+    if (foodItemId === undefined) {
+        throw new Error("foodItemId is undefined");
+    }
     const foodItem = await prisma.foodItem.findUnique({
         where: {
             id: foodItemId ?? 0,
@@ -55,11 +62,12 @@ export async function AddTransaction({ foodItemId }: { foodItemId: number }) {
                 );
             }}
         >
-            <SubmitButton
+            {/* <SubmitButton
                 className="btn-take"
                 pendingContent="lege Transaction an.."
                 readyContent="RETTEN"
-            />
+            /> */}
+            <button className="btn-take">RETTEN</button>
         </form>
     );
 }

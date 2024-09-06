@@ -71,10 +71,28 @@ export default function SearhComponent({ userProfile }: Props) {
                     </h4>
                     <div className="product-teasers grid">
                         {foodItems.map((foodItem) => (
+                            // <FoodItemTeaser
+                            //     key={foodItem.id!}
+                            //     {...foodItem}
+                            //     active={true}
+                            // />
+
                             <FoodItemTeaser
-                                key={foodItem.id}
-                                {...foodItem}
+                                key={foodItem.id! as number}
+                                title={foodItem.title}
+                                quantity={foodItem.quantity}
+                                expirationDate={foodItem.expirationDate}
+                                description={foodItem.description}
+                                id={foodItem.id}
+                                locationId={foodItem.locationId}
+                                Fridge={foodItem.Fridge}
                                 active={true}
+                                category={foodItem.category}
+                                photo={foodItem.photo}
+                                createdAt={foodItem.createdAt}
+                                updatedAt={foodItem.updatedAt}
+                                username={userProfile.username}
+                                userid={userProfile.id}
                             />
                         ))}
                     </div>

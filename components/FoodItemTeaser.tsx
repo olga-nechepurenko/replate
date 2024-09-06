@@ -1,13 +1,37 @@
+"use client";
 import type { FoodItem, Fridge, Location } from "@prisma/client";
 import Link from "next/link";
-import { DeleteFridge } from "./DeleteFridge";
-import { getDistance, getUserLocation } from "@/lib/helpers";
-import axios from "redaxios";
 import { AddTransaction } from "./AddTransaction";
+import type { ReactNode } from "react";
+import SubmitButton from "./SubmitButton";
+import { auth } from "@/auth";
+import { userInDb } from "./Registration/registrationServerActions";
+import {
+    createTransaction,
+    getFoodItemWithUserlocation,
+} from "./transactionServerActions";
 
-type Props = { Fridge: Fridge | null } & FoodItem & {
-        active: boolean;
-    };
+// type Props = { Fridge: Fridge | null } & FoodItem & {
+//         active: boolean;
+//     };
+
+type Props = {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    quantity: number;
+    expirationDate: Date;
+    locationId: number | null;
+    photo: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    Fridge: Fridge | null;
+    active: boolean;
+    key: number;
+    username: string;
+    userid: number;
+};
 export default function FoodItemTeaser({
     title,
     quantity,
@@ -17,6 +41,8 @@ export default function FoodItemTeaser({
     locationId,
     active,
     Fridge,
+    username,
+    userid,
 }: Props) {
     const defaultLocation = Fridge!.defaultLocation;
     const getDifferenceInDays = () => {
@@ -32,34 +58,74 @@ export default function FoodItemTeaser({
     };
 
     const daysDifference = getDifferenceInDays();
+    console.log("id", id);
+
+    const handleAddTransaction = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const foodItem = await getFoodItemWithUserlocation(id);
+        // prisma.foodItem.findUnique({
+        //     where: {
+        //         id,
+        //     },
+        //     include: {
+        //         Fridge: {
+        //             include: {
+        //                 Location: true,
+        //                 User: true,
+        //             },
+        //         },
+        //     },
+        // });
+
+        // const session = await auth();
+        // const userEmail = session?.user.email ?? "";
+        // const currentUserProfile = await userInDb(userEmail);
+        if (!foodItem || !foodItem.Fridge || !foodItem.Fridge.User) {
+            return;
+        }
+        await createTransaction(
+            foodItem.id,
+            foodItem.Fridge?.User?.id ?? null,
+            userid,
+            foodItem.title,
+            foodItem.Fridge?.User?.username ?? null,
+            username
+        );
+        return;
+    };
 
     return (
         <article className="product-teaser">
-            <Link
-                className="fridge__link"
-                href={active ? `/foodItemTransaction/${id}` : ""}
-            >
-                <h3>{title}</h3>
-                <p>{description}</p>
-                <strong>Menge: {quantity}</strong>
+            <h3>{title}</h3>
+            <p>{description}</p>
+            <strong>Menge: {quantity}</strong>
 
-                {expirationDate && (
-                    <p>
-                        Ablaufdatum: :
-                        <strong>
-                            in {daysDifference}
-                            {daysDifference > 1 ? " Tagen" : " Tag"}
-                        </strong>
-                    </p>
-                )}
+            {expirationDate && (
+                <p>
+                    Ablaufdatum: :
+                    <strong>
+                        in {daysDifference}
+                        {daysDifference > 1 ? " Tagen" : " Tag"}
+                    </strong>
+                </p>
+            )}
 
-                {defaultLocation && (
-                    <>
-                        <strong>{defaultLocation}</strong>
-                    </>
-                )}
-            </Link>
-            {/* {active && <AddTransaction foodItemId={id} />} */}
+            {defaultLocation && (
+                <>
+                    <strong>{defaultLocation}</strong>
+                </>
+            )}
+
+            {active && (
+                <form onSubmit={handleAddTransaction}>
+                    <SubmitButton
+                        className="btn-take"
+                        pendingContent="lege Transaction an.."
+                        readyContent="RETTEN"
+                    />
+                </form>
+            )}
         </article>
     );
 }
