@@ -16,11 +16,11 @@ export default function SearhComponent({ userProfile }: Props) {
     const userLat = userProfile?.Location?.lat;
     const userLng = userProfile?.Location?.lng;
 
+    const [radius, setRadius] = useState(defaultRadius);
     const [productName, setProductName] = useState("");
     const [foodItems, setFoodItems] = useState([] as FoodItemWithFridge[]);
 
     const handleSearch = async (event: React.FormEvent) => {
-        const radius = defaultRadius;
         event.preventDefault();
 
         if (!userLat || !userLng) {
@@ -40,18 +40,35 @@ export default function SearhComponent({ userProfile }: Props) {
 
     return (
         <>
-            <form onSubmit={handleSearch}>
+            <form onSubmit={handleSearch} className="search-form">
                 <input
                     type="text"
                     placeholder="nach Lebensmittel suchen..."
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                 />
+                <div className="slider-container">
+                    <label htmlFor="radius-slider">
+                        Search Radius: {radius} km
+                    </label>
+                    <input
+                        id="radius-slider"
+                        type="range"
+                        min="1"
+                        max="50"
+                        value={radius}
+                        onChange={(e) => setRadius(Number(e.target.value))}
+                    />
+                </div>
+
                 <button type="submit">finde in meiner Nähe</button>
             </form>
             {foodItems.length > 0 ? (
                 <>
-                    <h4>Ich bin noch gut: {productName}</h4>
+                    <h4>
+                        Ich bin noch gut: {productName} : {foodItems.length} in
+                        der Nähe{" "}
+                    </h4>
                     <div className="product-teasers grid">
                         {foodItems.map((foodItem) => (
                             <FoodItemTeaser
@@ -63,7 +80,7 @@ export default function SearhComponent({ userProfile }: Props) {
                     </div>
                 </>
             ) : (
-                <h4>Keine Lebensmittel in der Nähe gefunden..</h4>
+                <h1>...</h1>
             )}
         </>
     );

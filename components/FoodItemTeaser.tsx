@@ -59,7 +59,7 @@ export default function FoodItemTeaser({
                     </>
                 )}
             </Link>
-            {active && <AddTransaction foodItemId={id} />}
+            {/* {active && <AddTransaction foodItemId={id} />} */}
         </article>
     );
 }
