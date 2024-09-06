@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { capitalize } from "es-toolkit";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import prisma from "@/prisma/db";
 import FridgeTeaser from "@/components/FridgeTeaser";
 import AddFridge from "@/components/AddFridge";
 import MessageComponent from "@/components/MessageComponent";
 import AddAnswerForm from "@/components/AddAnswerForm";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
     title: "Messages",
@@ -17,6 +18,10 @@ type Props = {
     };
 };
 export default async function MessagesPage({ params: { profileId } }: Props) {
+    const session = await auth();
+    if (!session) {
+        redirect("/");
+    }
     const messages = await prisma.message.findMany({
         where: {
             receiverId: Number(profileId),

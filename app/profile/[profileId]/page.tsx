@@ -1,8 +1,9 @@
 //import EventTeaser from "@/components/Veranstaltungen/EventTeaser";
+import { auth } from "@/auth";
 import FridgeTeaser from "@/components/FridgeTeaser";
 import prisma from "@/prisma/db";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const revalidate = 3600;
 
@@ -10,6 +11,10 @@ type Props = {
     params: { profileId: string };
 };
 export default async function ProfilePage({ params: { profileId } }: Props) {
+    const session = await auth();
+    if (!session) {
+        redirect("/");
+    }
     const profile = await prisma.user.findUnique({
         where: {
             id: Number(profileId),

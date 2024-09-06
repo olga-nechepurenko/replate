@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import prisma from "@/prisma/db";
 import TransactionInList from "@/components/TransactionInList";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const revalidate = 3600;
 
@@ -29,6 +31,10 @@ type Props = {
 export default async function UserTransactionsPage({
     params: { profileId },
 }: Props) {
+    const session = await auth();
+    if (!session) {
+        redirect("/");
+    }
     const giveTransactions = await prisma.transaction
         .findMany({
             where: {
